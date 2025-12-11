@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25c8dccb4a21612459c583da874a93ef, type: 3}
+  m_Name: AnimalsTheme
+  m_EditorClassIdentifier: Assembly-CSharp::Eduzo.Games.Patterns.Data.PatternsThemeSO
+  icons:
+  - {fileID: 21300000, guid: fa32afe6e8329dc42ae214213d313290, type: 3}
+  - {fileID: 21300000, guid: 183f99b5966f24543afe198248764b7e, type: 3}
+  - {fileID: 21300000, guid: de17cacbb1d2ea04c86672cdcb717fc0, type: 3}
+  - {fileID: 21300000, guid: 5f0522000f75f6d458c09a117654e557, type: 3}
+  - {fileID: 21300000, guid: 24f5d028b9b4f624ab2bdb1273ccfc54, type: 3}
+  - {fileID: 21300000, guid: 7b93bd63d77253f41b1bcae029cb4df2, type: 3}

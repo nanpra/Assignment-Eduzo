@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d5007ea5b197c40a01c91b288ba32e, type: 3}
+  m_Name: Patterns Theme Database
+  m_EditorClassIdentifier: Assembly-CSharp::Eduzo.Games.Patterns.Data.PatternsThemeDatabase
+  shapesTheme: {fileID: 11400000, guid: 54f2c7713538ca945b6c8a61dfbd2a88, type: 2}
+  alphabetsTheme: {fileID: 11400000, guid: a8a0f87683b059f4ea404e6eeb842a53, type: 2}
+  animalsTheme: {fileID: 11400000, guid: 778aeee6e4783b84582d7ce4146bd3c9, type: 2}
