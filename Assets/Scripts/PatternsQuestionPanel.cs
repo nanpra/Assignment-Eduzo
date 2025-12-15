@@ -20,6 +20,7 @@ namespace Eduzo.Games.Patterns.UI
         public List<TMP_Dropdown> letterDropdowns = new();
         public List<bool> missingFlags = new();
 
+        public int MIN_ITEMS = 3;
         public int MAX_ITEMS = 10;
         public int MAX_MISSINGINDEXES = 3;
 
@@ -58,7 +59,7 @@ namespace Eduzo.Games.Patterns.UI
             letterDropdowns.Clear();
             missingFlags.Clear();
 
-            count = Mathf.Clamp(count, 2, MAX_ITEMS);
+            count = Mathf.Clamp(count, MIN_ITEMS, MAX_ITEMS);
 
             for (int i = 0; i < count; i++)
             {
@@ -70,9 +71,7 @@ namespace Eduzo.Games.Patterns.UI
                 TMP_Dropdown dd = slot.GetComponentInChildren<TMP_Dropdown>();
                 Toggle toggleBtn = slot.GetComponentInChildren<Toggle>();
 
-                Image questionMarkImage = slot.transform.Find("QuestionMarkImage")
-                                                       ?.GetComponent<Image>();
-                if (questionMarkImage != null)
+                if (slot.transform.Find("QuestionMarkImage").TryGetComponent<Image>(out var questionMarkImage))
                     questionMarkImage.color = new Color(1f, 1f, 1f, 0f);
 
                 // Populate dropdown dynamically
@@ -130,9 +129,9 @@ namespace Eduzo.Games.Patterns.UI
                 error = "Enter valid number of items.";
                 return false;
             }
-            if (count < 2 || count > MAX_ITEMS)
+            if (count < MIN_ITEMS || count > MAX_ITEMS)
             {
-                error = "Items must be between 2 and 10.";
+                error = $"Items must be between {MIN_ITEMS} and {MAX_ITEMS}.";
                 return false;
             }
             return true;

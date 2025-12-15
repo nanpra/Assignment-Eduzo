@@ -40,34 +40,72 @@ namespace Eduzo.Games.Patterns.Core
         public void LoseLife()
         {
             if (PatternsUIManager.Instance.CurrentMode == PatternsGameMode.Practice)
-                return; // no life lost in practice
+                return;
+
+            if (lifeCurrentIndex >= totalLives)
+                return;
 
             int index = lifeCurrentIndex;
-            if (index >= totalLives) return;
-
             lifeCurrentIndex++;
 
             Image filled = lifeFilledImages[index];
             Image empty = lifeEmptyImages[index];
 
-            DOTween.Kill(filled.transform);
             filled.raycastTarget = false;
+            LoseLifeAnimation(filled , empty);
+        }
 
-            Vector3 originalPos = filled.transform.localPosition;
+        private void LoseLifeAnimation(Image filled, Image empty)
+        {
+            RectTransform rt = filled.rectTransform;
+            Vector2 startPos = rt.anchoredPosition;
+            Vector3 startScale = rt.localScale;
+
+            DOTween.Kill(rt);
+
+            // Disable layout while animating
+            LayoutGroup layout = filled.GetComponentInParent<LayoutGroup>();
+            if (layout != null) layout.enabled = false;
 
             Sequence seq = DOTween.Sequence();
-            seq.Append(filled.transform.DOLocalMoveY(originalPos.y + 80f, 0.25f).SetEase(Ease.OutQuad));
-            seq.Append(filled.transform.DOLocalMoveY(originalPos.y - 30f, 0.30f).SetEase(Ease.InQuad));
-            seq.OnComplete(() =>
+
+            // Jump UP
+            seq.Append(
+                rt.DOAnchorPosY(startPos.y + 150f, 0.3f)
+                  .SetEase(Ease.OutQuad)
+            );
+
+            // Fall DOWN
+            seq.Append(
+                rt.DOAnchorPosY(startPos.y, 0.2f)
+                  .SetEase(Ease.InQuad)
+            );
+
+            // Impact hit
+            seq.AppendCallback(() =>
+            {
+                rt.DOPunchScale(Vector3.one * 0.25f, 0.25f, 10);
+                rt.DOPunchAnchorPos(Vector2.down * 20f, 0.25f, 10);
+            });
+
+            // Swap heart
+            seq.AppendInterval(0.05f);
+            seq.AppendCallback(() =>
             {
                 filled.enabled = false;
-                filled.transform.localPosition = originalPos;
-                empty.DOFade(1, 0.35f);
+                rt.localScale = startScale;
+                rt.anchoredPosition = startPos;
+
+                empty.DOFade(1f, 0.25f);
+            });
+
+            seq.OnComplete(() =>
+            {
+                // Re-enable layout
+                if (layout != null) layout.enabled = true;
+
                 if (lifeCurrentIndex >= totalLives)
-                {
-                    // notify game manager
                     PatternsGameManager.Instance.OnLivesDepleted();
-                }
             });
         }
 
@@ -104,5 +142,7 @@ namespace Eduzo.Games.Patterns.Core
             foreach (var e in lifeEmptyImages)
                 e.gameObject.SetActive(false);
         }
+
+        public int CurrentLives => totalLives - lifeCurrentIndex;
     }
 }

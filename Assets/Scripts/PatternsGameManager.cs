@@ -15,10 +15,10 @@ namespace Eduzo.Games.Patterns.Core
 
         [Header("Win Effects")]
         public GameObject patternsWinVFX;
+        public GameObject starsVFX;
 
         private List<PatternsQuestionPattern> runtimeQuestions = new();
         public int currentQuestionIndex = 0;
-        private int correctAnswersTotal = 0;
 
         //to track question results data
         public List<PatternsQuestionResult> gameDataSummary = new();
@@ -44,7 +44,6 @@ namespace Eduzo.Games.Patterns.Core
         public void StartGameplay()
         {
             // Reset tracking data
-            correctAnswersTotal = 0;
             currentQuestionIndex = 0;
             totalWrong = 0;
             totalCorrect = 0;
@@ -57,7 +56,7 @@ namespace Eduzo.Games.Patterns.Core
                 return;
             }
 
-            LoadCurrentQuestionToLoader();
+            Invoke(nameof(LoadCurrentQuestionToLoader), 1);  //Let the screen fade animation complete first
         }
 
         private void LoadCurrentQuestionToLoader()
@@ -81,6 +80,7 @@ namespace Eduzo.Games.Patterns.Core
         {
             PatternsAudioManager.Instance.PlaySFX("GameWin");
             patternsWinVFX.SetActive(true);
+            starsVFX.SetActive(true);
             PatternsUIManager.Instance.ShowGameOverPanel();
 
             int score = CalculateFinalScore();
@@ -102,14 +102,12 @@ namespace Eduzo.Games.Patterns.Core
             SaveSessionToJson();
         }
 
-        public void OnPlayerCorrectAnswerForSlot() => correctAnswersTotal++;
-
         public void ResetAllRuntimeData()
         {
-            runtimeQuestions?.Clear();
+            runtimeQuestions.Clear();
             currentQuestionIndex = 0;
-            correctAnswersTotal = 0;
             patternsWinVFX.SetActive(false);
+            starsVFX.SetActive(false);
             PatternsUIPatternLoader.Instance.ClearAll();
             PatternsCountdownTimer.Instance.StopTimer();
             if (PatternsLifeManager.Instance != null) PatternsLifeManager.Instance.ResetLives();
@@ -125,6 +123,14 @@ namespace Eduzo.Games.Patterns.Core
         {
             if (PatternsUIManager.Instance.CurrentMode == PatternsGameMode.Test)
                 HandleLose();
+        }
+
+        public bool IsLastQuestion => currentQuestionIndex >= runtimeQuestions.Count - 1;
+
+        public bool HasLivesLeft()
+        {
+            return PatternsLifeManager.Instance == null
+                || PatternsLifeManager.Instance.CurrentLives > 0;
         }
 
         public int CalculateFinalScore()

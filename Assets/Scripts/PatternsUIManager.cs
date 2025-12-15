@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Eduzo.Games.Patterns.Core;
 using Eduzo.Games.Patterns.Audio;
+using System.Collections;
 
 
 public enum PatternsGameMode
@@ -76,34 +77,43 @@ namespace Eduzo.Games.Patterns.UI
         private void OpenFormScreen()
         {
             // Transition from main menu to form panel
-            mainMenuCanvas.alpha = 0;
-            mainMenuCanvas.DOFade(0, animationFadeDuration);
-            mainMenuPanel.SetActive(false);
-
-            formPanel.SetActive(true);
-            formCanvas.alpha = 0;
-            formCanvas.DOFade(1, animationFadeDuration);
+            mainMenuCanvas.alpha = 1;
+            mainMenuCanvas.DOFade(0, animationFadeDuration).OnComplete(() =>
+            {
+                mainMenuPanel.SetActive(false);
+                formCanvas.alpha = 0;
+                formPanel.SetActive(true);
+                formCanvas.DOFade(1, animationFadeDuration);
+            });
         }
 
         public void StartGameplayFromForm()
         {
-            // After form confirms and runtime questions are loaded
-            gameplayPanel.SetActive(true);
-            gameplayCanvas.alpha = 0;
-            gameplayCanvas.DOFade(1, animationFadeDuration);
+            formCanvas.DOFade(0, animationFadeDuration).OnComplete(() =>
+            {
+                formPanel.SetActive(false);
+                // After form confirms and runtime questions are loaded
+                gameplayCanvas.alpha = 0;
+                gameplayPanel.SetActive(true);
+                gameplayCanvas.DOFade(1, animationFadeDuration);
+            });
 
             // Setup mode-specific systems
             if (CurrentMode == PatternsGameMode.Test)
             {
-                PatternsLifeManager.Instance.ResetLives();
-                PatternsCountdownTimer.Instance.StartTimer();
+                if (PatternsLifeManager.Instance != null)
+                    PatternsLifeManager.Instance.ResetLives();
+
+                if (PatternsCountdownTimer.Instance != null)
+                    PatternsCountdownTimer.Instance.StartTimer();
             }
             else // Practice
             {
                 if (PatternsLifeManager.Instance != null)
-                    PatternsLifeManager.Instance.DisableLifes(); // hide/disable UI
-                PatternsCountdownTimer.Instance.StopTimer();
-                PatternsCountdownTimer.Instance.timerText.text = "∞∞ / ∞∞";  // infinite time display
+                    PatternsLifeManager.Instance.DisableLifes();
+
+                if(PatternsCountdownTimer.Instance != null)
+                    PatternsCountdownTimer.Instance.DisableTimer();
             }
 
             // Tell GameManager to start playing
@@ -112,8 +122,9 @@ namespace Eduzo.Games.Patterns.UI
 
         public void ShowGameOverPanel()
         {
-            gameOverPanel.SetActive(true);
+            gameplayPanel.SetActive(false);
             gameOverCanvas.alpha = 0;
+            gameOverPanel.SetActive(true);
             gameOverCanvas.DOFade(1, animationFadeDuration);
         }
 
@@ -124,9 +135,10 @@ namespace Eduzo.Games.Patterns.UI
             PatternsPatternFormUI.Instance.ResetFormUI();
             PatternsGameManager.Instance.ResetAllRuntimeData();
 
-            formCanvas.DOFade(0, animationFadeDuration).OnComplete(() => formPanel.SetActive(false));
-            gameplayPanel.SetActive(false);
-            gameOverPanel.SetActive(false);
+            if(gameplayPanel.activeSelf)
+                gameplayCanvas.DOFade(0, animationFadeDuration).OnComplete(() => gameplayPanel.SetActive(false));
+            if(gameOverPanel.activeSelf)
+                gameOverCanvas.DOFade(0, animationFadeDuration).OnComplete(() => gameOverPanel.SetActive(false));
             mainMenuPanel.SetActive(true);
             mainMenuCanvas.alpha = 0;
             mainMenuCanvas.DOFade(1, animationFadeDuration);

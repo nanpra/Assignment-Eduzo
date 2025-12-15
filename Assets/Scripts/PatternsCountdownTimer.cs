@@ -8,6 +8,7 @@ namespace Eduzo.Games.Patterns.Core
     {
         public static PatternsCountdownTimer Instance;
 
+        public GameObject timerPanel;
         public TextMeshProUGUI timerText;
         public int startTimeValue = 60; // Test Mode default time
 
@@ -22,6 +23,9 @@ namespace Eduzo.Games.Patterns.Core
 
         public void StartTimer()
         {
+            if(timerPanel != null)
+                timerPanel.SetActive(true);
+
             StopTimer();
             currentTime = startTimeValue;
             runningRoutine = StartCoroutine(TimerRoutine());
@@ -71,8 +75,8 @@ namespace Eduzo.Games.Patterns.Core
         public void DisableTimer()
         {
             StopTimer();
-            if (timerText != null)
-                timerText.text = "∞∞ / ∞∞";  // infinity time
+            if(timerPanel != null)
+                timerPanel.SetActive(false);
         }
     }
 }

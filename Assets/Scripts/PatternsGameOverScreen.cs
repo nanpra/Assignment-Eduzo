@@ -39,13 +39,29 @@ namespace Eduzo.Games.Patterns.UI
             titleIcon.transform.localScale = Vector3.zero;
             titleIcon.transform.DOScale(1, 0.5f).SetEase(Ease.OutBack);
 
+            SetGameOverScreenButtons();
+
             float delay = 0.25f;
-            foreach (var s in starImages)
+
+            for (int i = 0; i < starImages.Length; i++)
             {
-                s.transform.localScale = Vector3.zero;
-                s.DOFade(0, 0);
-                s.transform.DOScale(1, 0.35f).SetDelay(delay).SetEase(Ease.OutBack);
-                s.DOFade(1, 0.35f).SetDelay(delay);
+                Image star = starImages[i];
+
+                star.transform.localScale = Vector3.zero;
+                star.DOFade(0, 0);
+                star.transform.DOScale(1f, 0.35f).SetDelay(delay).SetEase(Ease.OutBack);
+                star.DOFade(1, 0.35f).SetDelay(delay);
+
+                // Pulse ONLY the first star
+                if (i == 0)
+                {
+                    star.transform
+                        .DOScale(1.2f, 0.6f)
+                        .SetDelay(delay + 0.35f) // wait until it appears
+                        .SetLoops(-1, LoopType.Yoyo)
+                        .SetEase(Ease.InOutSine);
+                }
+
                 delay += 0.15f;
             }
         }
@@ -55,6 +71,7 @@ namespace Eduzo.Games.Patterns.UI
             finalScoreText.text = "Score: " + score;
             finalScoreText.transform.localScale = Vector3.zero;
             finalScoreText.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
+            SetGameOverScreenButtons();
 
             foreach (var s in starImages) s.enabled = false;
 
@@ -63,16 +80,29 @@ namespace Eduzo.Games.Patterns.UI
             titleIcon.transform.DOScale(1, 0.5f).SetEase(Ease.OutBack);
         }
 
+        private void SetGameOverScreenButtons()
+        {
+            bool isTestMode = PatternsUIManager.Instance.CurrentMode == PatternsGameMode.Test;
+            retryButton.transform.parent.GetComponent<Transform>().gameObject.SetActive(!isTestMode); //disable retry button for test mode
+
+            RectTransform parentRT = homeButton.transform.parent.GetComponent<RectTransform>();
+            if (isTestMode)
+                parentRT.anchoredPosition = new Vector2(-3500, -2500);
+            else
+                parentRT.anchoredPosition = new Vector2(-3800, -2500);
+        }
+
         private void OnRetryClicked()
         {
             PatternsAudioManager.Instance.PlaySFX("ButtonClick");
 
             // Hide win effects
             PatternsGameManager.Instance.patternsWinVFX.SetActive(false);
+            PatternsGameManager.Instance.starsVFX.SetActive(false);
 
             // Fade out Game Over Panel
             CanvasGroup cg = PatternsUIManager.Instance.gameOverPanel.GetComponent<CanvasGroup>();
-            cg.DOFade(0, 0.3f).OnComplete(() =>
+            cg.DOFade(0, 0.5f).OnComplete(() =>
             {
                 PatternsUIManager.Instance.gameOverPanel.SetActive(false);
 
@@ -101,7 +131,7 @@ namespace Eduzo.Games.Patterns.UI
                 var gameplayCanvas = PatternsUIManager.Instance.gameplayPanel.GetComponent<CanvasGroup>();
                 PatternsUIManager.Instance.gameplayPanel.SetActive(true);
                 gameplayCanvas.alpha = 0;
-                gameplayCanvas.DOFade(1, 0.3f);
+                gameplayCanvas.DOFade(1, 0.5f);
             });
         }
 

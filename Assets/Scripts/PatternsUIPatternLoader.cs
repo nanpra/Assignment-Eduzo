@@ -20,6 +20,10 @@ namespace Eduzo.Games.Patterns.UI
         public GameObject questionImagePrefab;
         public GameObject optionButtonPrefab;
 
+        [Header("VFX")]
+        public GameObject wrongAnswerVFX;
+        public GameObject rightAnswerVFX;
+
         [HideInInspector] public static PatternsQuestionPattern currentQuestion;
         public int correctAnswersCount = 0;
 
@@ -100,8 +104,8 @@ namespace Eduzo.Games.Patterns.UI
                 // Animation
                 slot.transform.localScale = Vector3.zero;
                 slot.transform
-                    .DOScale(1f, 0.38f)
-                    .SetDelay(i * 0.06f)
+                    .DOScale(1f, 0.5f)
+                    .SetDelay(i * 0.1f)
                     .SetEase(Ease.OutBack);
             }
         }
@@ -167,8 +171,8 @@ namespace Eduzo.Games.Patterns.UI
                 img.sprite = icon;
 
                 opt.transform.localScale = Vector3.zero;
-                opt.transform.DOScale(1f, 0.34f)
-                    .SetDelay(0.06f * i)
+                opt.transform.DOScale(1f, 0.5f)
+                    .SetDelay(0.1f * i)
                     .SetEase(Ease.OutBack);
 
                 Button btn = opt.GetComponent<Button>();
@@ -214,34 +218,60 @@ namespace Eduzo.Games.Patterns.UI
 
         private void ResetClickLock() => canClick = true;
 
+        private void MoveToNextQuestion()
+        {
+            ClearAll();
+            PatternsGameManager.Instance.CompleteCurrentQuestion();
+        }
+
+        private void HandleVFX(GameObject targetVFX , bool toActivate)
+        {
+            targetVFX.SetActive(toActivate);
+        }
+
         private void HandleWrongAnswer(Sprite chosenIcon)
         {
+            HandleVFX(wrongAnswerVFX, true);
             PatternsAudioManager.Instance.PlaySFX("WrongAnswer");
-
-            // update tracking data
             PatternsGameManager.Instance.totalWrong++;
+
             var summary = PatternsGameManager.Instance.gameDataSummary[^1];
             char wrongLetter = GetLetterFromSprite(chosenIcon);
             summary.wrongAnswers.Add(wrongLetter);
 
-            if (PatternsUIManager.Instance.CurrentMode == PatternsGameMode.Test)
-                if (PatternsLifeManager.Instance != null)
-                    PatternsLifeManager.Instance.LoseLife();
+            bool isTestMode = PatternsUIManager.Instance.CurrentMode == PatternsGameMode.Test;
+            bool isLastQuestion = PatternsGameManager.Instance.IsLastQuestion;
 
-            // shake missing slots
+            if (isTestMode && PatternsLifeManager.Instance != null)
+                PatternsLifeManager.Instance.LoseLife();
+
+            // Shake missing slots (visual feedback)
             foreach (Transform slot in questionParentTransform)
             {
                 Image img = slot.GetComponent<Image>();
                 if (img.sprite == currentQuestion.patternQuestionMarkIcon)
                 {
-                    slot.DOShakePosition(0.45f, 18, 12);
-                    slot.DOShakeRotation(0.45f, 18, 10);
+                    slot.DOShakePosition(0.35f, 15, 10);
+                    slot.DOShakeRotation(0.35f, 15, 8);
                 }
             }
+
+            // FLOW CONTROL
+            if (!isLastQuestion)
+            {
+                // Move to next question ONLY if lives still remain
+                if (isTestMode && PatternsLifeManager.Instance.CurrentLives > 0)
+                    Invoke(nameof(MoveToNextQuestion), 0.5f);
+            }
+            // else: LAST QUESTION → stay here until lives are over
+
+            //to disbale VFX
+            DOVirtual.DelayedCall(1f, () => HandleVFX(wrongAnswerVFX, false));
         }
 
         private void HandleCorrectAnswer(Sprite chosen)
         {
+            HandleVFX(rightAnswerVFX, true);
             PatternsAudioManager.Instance.PlaySFX("CorrectAnswer");
 
             char chosenLetter = GetLetterFromSprite(chosen);
@@ -286,8 +316,10 @@ namespace Eduzo.Games.Patterns.UI
 
             correctAnswersCount++;
             PatternsGameManager.Instance.totalCorrect++;
-            PatternsGameManager.Instance.OnPlayerCorrectAnswerForSlot();
             AnimateCorrectImageIcon(slotImg , chosen);
+
+            //to disbale VFX
+            DOVirtual.DelayedCall(1f, () => HandleVFX(rightAnswerVFX, false));
         }
 
         private void AnimateCorrectImageIcon(Image slotImg , Sprite chosen)

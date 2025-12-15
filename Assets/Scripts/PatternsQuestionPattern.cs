@@ -28,10 +28,8 @@ namespace Eduzo.Games.Patterns.Data
             patternIcons.CopyTo(display, 0);
 
             foreach (int idx in patternMissingIndices)
-            {
                 if (idx >= 0 && idx < display.Length)
                     display[idx] = patternQuestionMarkIcon;
-            }
 
             return display;
         }
