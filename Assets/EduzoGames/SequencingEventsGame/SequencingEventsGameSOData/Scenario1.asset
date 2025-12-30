@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8655d64795b73844c8fb148917daf7d9, type: 3}
+  m_Name: Scenario1
+  m_EditorClassIdentifier: Assembly-CSharp::SequencingEventsScenario
+  scenarioId: MorningSequence
+  displayName: MorningSequence
+  sequenceSprites:
+  - {fileID: 21300000, guid: 8438175f1430033419dc5ea8124570ad, type: 3}
+  - {fileID: 21300000, guid: 7bdbb3af02e617d41955501c03623963, type: 3}
+  - {fileID: 21300000, guid: 1bd806e19513ef24887c0c79864209c5, type: 3}
+  - {fileID: 21300000, guid: 6a2e7c5821b8f8547adb7476bbee5da5, type: 3}

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8655d64795b73844c8fb148917daf7d9, type: 3}
+  m_Name: Scenario2
+  m_EditorClassIdentifier: Assembly-CSharp::SequencingEventsScenario
+  scenarioId: RunSequence
+  displayName: RunSequence
+  sequenceSprites:
+  - {fileID: 21300000, guid: 815c340d8a56ff246b8aa53e3a5accba, type: 3}
+  - {fileID: 21300000, guid: 21d3a8f569482a740a3a9571d0c35d2a, type: 3}
+  - {fileID: 21300000, guid: 37f2bbebda92d1f4c90d5a8efd7b0b8e, type: 3}
+  - {fileID: 21300000, guid: c9d5ed9380e4386468a368b072a6f83b, type: 3}
