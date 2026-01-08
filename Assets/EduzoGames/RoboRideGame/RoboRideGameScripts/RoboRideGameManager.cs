@@ -14,7 +14,6 @@ namespace Eduzo.Games.RoboRide.Core
         public static RoboRideGameManager Instance;
 
         [Header("Win Effects")]
-        public GameObject patternsWinVFX;
         public GameObject starsVFX;
 
         [Header("Robot References")]
@@ -90,7 +89,7 @@ namespace Eduzo.Games.RoboRide.Core
         private void ResetStar()
         {
             RectTransform starRt = RoboRideQuestionsLoader.Instance.star;
-            starRt.localPosition = new Vector2(2700, -550);
+            starRt.localPosition = new Vector2(1600, -90);
             starRt.localScale = Vector2.zero;
             starRt.DOScale(1f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.3f);
         }
@@ -172,8 +171,6 @@ namespace Eduzo.Games.RoboRide.Core
         public void HandleAllQuestionsCompleted()
         {
             RoboRideAudioManager.Instance.PlaySFX("GameWin");
-
-            patternsWinVFX.SetActive(true);
             starsVFX.SetActive(true);
 
             RoboRideUIManager.Instance.ShowGameOverPanel();

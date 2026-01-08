@@ -131,6 +131,7 @@ namespace Eduzo.Games.RoboRide.UI
         public void OnHomeClicked()
         {
             // reset everything and return to main menu
+            RoboRideGameManager.Instance.starsVFX.SetActive(false);
             RoboRideAudioManager.Instance.PlaySFX("ButtonClick");
             RoboRideQuestionFormUI.Instance.ResetFormUI();
             var intro = FindAnyObjectByType<RoboRideGameplayIntroController>();

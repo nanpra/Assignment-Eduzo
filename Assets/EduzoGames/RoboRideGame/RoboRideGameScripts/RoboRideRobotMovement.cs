@@ -1,5 +1,4 @@
 using DG.Tweening;
-using System;
 using UnityEngine;
 
 namespace Eduzo.Games.RoboRide.Core
@@ -22,7 +21,7 @@ namespace Eduzo.Games.RoboRide.Core
         public void CollectStar(RectTransform star)
         {
             float xValue = star.GetComponent<RectTransform>().anchoredPosition.x;
-            star.DOJumpAnchorPos(new Vector2(xValue, 0), 50, 3, 0.4f);
+            star.DOJumpAnchorPos(new Vector2(xValue, 0), 200, 1, 0.4f);
             star.DOScale(0f, 0.4f).SetEase(Ease.InBack).OnComplete(() =>
                 {
                     bigStarVFX.SetActive(true);

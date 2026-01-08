@@ -242,7 +242,7 @@ namespace Eduzo.Games.RoboRide.Core
             seq.AppendInterval(0.8f);
 
             // Robot crosses
-            seq.Append(robot.CrossPlatforms(2500f, 2f));
+            seq.Append(robot.CrossPlatforms(1600f, 2f));
 
             // Collect star early
             seq.InsertCallback(
@@ -309,7 +309,7 @@ namespace Eduzo.Games.RoboRide.Core
             RectTransform rt = RoboRideGameManager.Instance.robot.robotRT;
             rt.DOKill();
             rt.DOLocalRotate(Vector3.zero, 0.1f);
-            rt.anchoredPosition = new Vector2(-2900f, -500f);
+            rt.anchoredPosition = new Vector2(-1600f, -100f);
         }
     }
 }

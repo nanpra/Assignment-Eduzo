@@ -64,8 +64,7 @@ namespace Eduzo.Games.SequencingEvents.UI
             transform.SetParent(canvas.transform, true);
             rectTransform.anchorMin = rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            rectTransform.anchoredPosition3D =
-                new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0f);
+            //rectTransform.anchoredPosition3D = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0f);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -82,15 +81,12 @@ namespace Eduzo.Games.SequencingEvents.UI
                     : canvas.worldCamera,
                 out Vector2 localPos);
 
-            rectTransform.anchoredPosition =new Vector3(localPos.x - dragOffset.x, localPos.y - dragOffset.y, 0f);
+            rectTransform.anchoredPosition =
+                new Vector3(localPos.x - dragOffset.x, localPos.y - dragOffset.y, 0f);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            // BLOCK DRAGGING DURING HAMMER ANIMATION
-            if (SequencingEventsQuestionsLoader.Instance.IsInputLocked)
-                return;
-
             canvasGroup.blocksRaycasts = true;
             layoutElement.ignoreLayout = false;
 

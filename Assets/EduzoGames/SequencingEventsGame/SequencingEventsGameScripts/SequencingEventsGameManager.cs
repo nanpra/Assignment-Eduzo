@@ -123,7 +123,9 @@ namespace Eduzo.Games.SequencingEvents.Core
         public void OnAnswerSubmitted(bool wasCorrect)
         {
             TrackData(wasCorrect);
+
             bool isLastQuestion = currentQuestionIndex >= runtimeQuestions.Count - 1;
+            bool isTestMode = SequencingEventsUIManager.Instance.CurrentMode == SequencingEventsGameMode.Test;
 
             if (wasCorrect)
             {
@@ -135,30 +137,31 @@ namespace Eduzo.Games.SequencingEvents.Core
 
                 currentQuestionIndex++;
                 LoadQuestion();
+                return;
             }
-            else
+
+            // WRONG ANSWER
+            if (!isTestMode)
             {
-                SequencingEventsLifeManager.Instance.LoseLife();
-
-                // Lives over → Lose
-                if (SequencingEventsLifeManager.Instance.CurrentLives <= 0)
-                {
-                    HandleLose();
-                    return;
-                }
-
-                // Wrong but NOT last → move ahead
-                if (!isLastQuestion)
-                {
-                    currentQuestionIndex++;
-                    LoadQuestion();
-                }
-                // Wrong AND last → retry same question
-                else
-                {
-                    LoadQuestion();
-                }
+                // PRACTICE MODE → retry same question
+                LoadQuestion();
+                return;
             }
+
+            // TEST MODE → lose life
+            SequencingEventsLifeManager.Instance.LoseLife();
+
+            if (SequencingEventsLifeManager.Instance.CurrentLives <= 0)
+            {
+                HandleLose();
+                return;
+            }
+
+            // Move to next question in TEST mode
+            if (!isLastQuestion)
+                currentQuestionIndex++;
+
+            LoadQuestion();
         }
 
         #endregion

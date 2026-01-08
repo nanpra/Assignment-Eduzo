@@ -115,14 +115,14 @@ namespace Eduzo.Games.RoboRide.UI
                 .SetEase(Ease.OutCubic));
 
             seq.Join(questionBGPanel
-                .DOAnchorPosX(-2000, uiReachDuration)
+                .DOAnchorPosX(-900, uiReachDuration)
                 .SetEase(Ease.OutCubic));
         }
 
         private void AnimateRobot(Sequence seq)
         {
             Tween moveTween = robotTransform
-                .DOLocalMoveX(-2900f, robotMoveDuration)
+                .DOLocalMoveX(-1600f, robotMoveDuration)
                 .SetEase(Ease.OutQuart);
 
             seq.Append(moveTween);
@@ -180,7 +180,7 @@ namespace Eduzo.Games.RoboRide.UI
                 .SetEase(Ease.OutQuad));
 
             bounce.Join(robotHead
-                .DOLocalMoveX(280f, 0.12f)
+                .DOLocalMoveX(125f, 0.12f)
                 .SetEase(Ease.OutQuad));
 
             // Snap back
@@ -193,7 +193,7 @@ namespace Eduzo.Games.RoboRide.UI
                 .SetEase(Ease.OutBack));
 
             bounce.Join(robotHead
-                .DOLocalMoveX(100f, 0.18f)
+                .DOLocalMoveX(0, 0.18f)
                 .SetEase(Ease.OutBack));
 
             return bounce;

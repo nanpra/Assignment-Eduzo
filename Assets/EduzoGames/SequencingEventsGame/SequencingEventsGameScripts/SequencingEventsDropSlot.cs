@@ -33,6 +33,7 @@ namespace Eduzo.Games.SequencingEvents.Core
 
         public void OnDrop(PointerEventData eventData)
         {
+            if (SequencingEventsQuestionsLoader.Instance.IsInputLocked) return;
             if (eventData.pointerDrag == null) return;
             if (!eventData.pointerDrag.TryGetComponent(out SequencingEventsDraggableItem item)) return;
 
@@ -82,7 +83,7 @@ namespace Eduzo.Games.SequencingEvents.Core
                 correctGlowVFX.SetActive(true);
                 correctGlowVFX.transform.localScale = Vector3.zero;
                 correctGlowVFX.transform
-                    .DOScale(320f, 0.25f)
+                    .DOScale(180f, 0.25f)
                     .SetEase(Ease.OutBack);
             }
 

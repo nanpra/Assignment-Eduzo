@@ -87,9 +87,9 @@ namespace Eduzo.Games.SequencingEvents.UI
 
             RectTransform parentRT = homeButton.transform.parent.GetComponent<RectTransform>();
             if (isTestMode)
-                parentRT.anchoredPosition = new Vector2(-3500, -2500);
+                parentRT.anchoredPosition = new Vector2(0, -700);
             else
-                parentRT.anchoredPosition = new Vector2(-3800, -2500);
+                parentRT.anchoredPosition = new Vector2(-200, -700);
         }
 
         private void OnRetryClicked()
