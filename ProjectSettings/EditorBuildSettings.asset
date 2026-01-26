@@ -11,9 +11,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/EduzoGames/RoboRideGame/RoboRideScene/RoboRide.unity
     guid: 896229a7813426f4ea9f0b7f6277f8cf
-  - enabled: 1
+  - enabled: 0
     path: Assets/EduzoGames/SequencingEventsGame/SequencingEventsScene/SequencingEvents.unity
     guid: 13edf62971861ad4d9e1cc28b143047d
+  - enabled: 1
+    path: Assets/EduzoGames/Archery/ArcheryGameScene/Archery.unity
+    guid: 01e44369af0686544a9b81875bbd28f5
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 83c413217c3e6894c93b8cc4fcd72bbe, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 8ce315d1e20a2ab4199a49ea88ed9f80, type: 2}
