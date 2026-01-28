@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Eduzo.Games.Archery.Core.ArcheryArrowPool
   arrowPrefab: {fileID: 1886437463148220366, guid: 870cd56b90d40d242897df013af9e2f3, type: 3}
   bowOrigin: {fileID: 654822101}
-  poolSize: 5
+  poolSize: 7
 --- !u!4 &340050881
 Transform:
   m_ObjectHideFlags: 0

@@ -131,13 +131,23 @@ namespace Eduzo.Games.Archery.Core
             bool isTestMode = ArcheryUIManager.Instance.CurrentMode == ArcheryGameMode.Test;
             bool isLastQuestion = currentQuestionIndex >= runtimeQuestions.Count - 1;
 
+            ArcheryQuestionData currentQuestion = runtimeQuestions[currentQuestionIndex];
+            bool isSequenceQuestion = currentQuestion.answerType == ArcheryAnswerType.ArrangeInSequence;
+
             // TEST MODE (ONE ATTEMPT PER QUESTION)
             if (isTestMode)
             {
                 FinalizeCurrentQuestion(wasCorrect);
 
+                // NO LIVES LEFT → END GAME
+                if (!ArcheryLifeManager.Instance.HasLivesLeft())
+                {
+                    HandleLose();
+                    return;
+                }
+
                 // LAST QUESTION → END GAME
-                if (isLastQuestion)
+                if (isLastQuestion && !isSequenceQuestion)
                 {
                     if (wasCorrect)
                         HandleAllQuestionsCompleted();
@@ -147,9 +157,13 @@ namespace Eduzo.Games.Archery.Core
                     return;
                 }
 
-                if (!ArcheryLifeManager.Instance.HasLivesLeft())
+                if (isSequenceQuestion)
                 {
-                    HandleLose();
+                    // In sequence questions, even in test mode, allow retries until correct
+                    if (wasCorrect)
+                        currentQuestionIndex++;
+
+                    StartCoroutine(LoadQuestion_FrontEnd());
                     return;
                 }
 
