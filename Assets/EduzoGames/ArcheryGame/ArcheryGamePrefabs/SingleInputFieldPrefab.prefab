@@ -75,7 +75,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3438346239
+    rgba: 3422552064
   m_fontColor: {r: 0, g: 0, b: 0, a: 0.8}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -252,10 +252,10 @@ MonoBehaviour:
   m_fontSize: 120
   m_fontSizeBase: 120
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontSizeMax: 120
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -357,7 +357,6 @@ GameObject:
   - component: {fileID: 7664899747566030978}
   - component: {fileID: 2813771399068889048}
   - component: {fileID: 7162688097824359822}
-  - component: {fileID: 2585979269946319677}
   m_Layer: 5
   m_Name: SingleInputFieldPrefab
   m_TagString: Untagged
@@ -524,16 +523,3 @@ MonoBehaviour:
   isAlert: 0
   m_InputValidator: {fileID: 0}
   m_ShouldActivateOnSelect: 1
---- !u!114 &2585979269946319677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8041224916584290838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26113240c3109df41a0e4c6caa528622, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Eduzo.Games.Archery.UI.ArcherySingleLetterInput
-  input: {fileID: 7162688097824359822}

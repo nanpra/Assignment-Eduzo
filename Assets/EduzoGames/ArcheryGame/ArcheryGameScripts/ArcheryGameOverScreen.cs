@@ -95,7 +95,7 @@ namespace Eduzo.Games.Archery.UI
 
         private void OnRetryClicked()
         {
-            ArcheryQuestionsLoader.Instance.ResetTargetVFX();
+            ArcheryQuestionsLoader.Instance.ResetTargetTexts();
             ArcheryAudioManager.Instance.PlaySFX("ButtonClick");
 
             // Hide win effects

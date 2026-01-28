@@ -1,10 +1,10 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using Eduzo.Games.Archery.Audio;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 
 namespace Eduzo.Games.Archery.Core
 {
@@ -30,7 +30,8 @@ namespace Eduzo.Games.Archery.Core
 
         private ArcheryQuestionData currentQuestion;
         private readonly List<string> sequence = new();
-        private string lastSelectedValue;
+        private readonly HashSet<int> usedTargetIndices = new();
+
 
         private void Awake()
         {
@@ -43,20 +44,20 @@ namespace Eduzo.Games.Archery.Core
         {
             currentQuestion = questionData;
             sequence.Clear();
-            lastSelectedValue = string.Empty;
+            usedTargetIndices.Clear();
 
             if (sequenceProgressText != null)
                 sequenceProgressText.text = "";
 
-            // Question text
             questionText.text = currentQuestion.question;
 
-            // Animate BG
             questionsBg.localScale = Vector3.zero;
             questionsBg.DOScale(1f, 0.25f).SetEase(Ease.OutBack);
 
+            ArcheryArrowPool.Instance.ResetPool();
+            aimController.ResetTargetVFX();
+
             LoadTargets(currentQuestion);
-            ClearUIFocus();
         }
 
         private void LoadTargets(ArcheryQuestionData questionData)
@@ -96,12 +97,18 @@ namespace Eduzo.Games.Archery.Core
 
         #region Answer Handling
 
-        public void OnTargetSelected(string value)
+        public bool IsTargetUsed(int index)
+        {
+            return usedTargetIndices.Contains(index);
+        }
+
+        public void OnTargetSelected(string value, int targetIndex)
         {
             if (currentQuestion == null)
                 return;
 
-            lastSelectedValue = value;
+            // Mark target as used
+            usedTargetIndices.Add(targetIndex);
 
             if (currentQuestion.answerType == ArcheryAnswerType.One)
                 HandleOneCorrect(value);
@@ -120,6 +127,7 @@ namespace Eduzo.Games.Archery.Core
             }
             else
             {
+                ArcheryGameManager.Instance.AddWrongAttempt(value);
                 PlayWrong();
             }
         }
@@ -128,21 +136,32 @@ namespace Eduzo.Games.Archery.Core
         {
             int expectedIndex = sequence.Count;
 
+            // WRONG STEP
             if (expectedIndex >= currentQuestion.correctAnswers.Count ||
                 value != currentQuestion.correctAnswers[expectedIndex])
             {
+                // Build FULL attempt including wrong value
+                List<string> failedAttempt = new(sequence)
+                {
+                    value
+                };
+
+                ArcheryGameManager.Instance.AddWrongAttempt(
+                    string.Join(",", failedAttempt)
+                );
+
                 PlayWrong();
                 return;
             }
 
-            // Correct step
+            // CORRECT STEP
             sequence.Add(value);
             ArcheryGameManager.Instance.totalCorrect++;
 
             if (sequenceProgressText != null)
                 sequenceProgressText.text = string.Join(" ", sequence);
 
-            // Completed sequence
+            // SEQUENCE COMPLETED
             if (sequence.Count == currentQuestion.correctAnswers.Count)
                 PlayCorrect();
         }
@@ -153,23 +172,18 @@ namespace Eduzo.Games.Archery.Core
 
         private void PlayCorrect()
         {
-            ArcheryAudioManager.Instance.PlaySFX("CorrectAnswer");
             correctAnswerVFX.SetActive(true);
+            ArcheryAudioManager.Instance.PlaySFX("CorrectAnswer");
             StartCoroutine(ProceedAfterResult(true));
         }
 
         private void PlayWrong()
         {
             ArcheryLifeManager.Instance.LoseLife();
-            ArcheryAudioManager.Instance.PlaySFX("WrongAnswer");
             wrongAnswerVFX.SetActive(true);
+            ArcheryAudioManager.Instance.PlaySFX("WrongAnswer");
 
             ArcheryGameManager.Instance.totalWrong++;
-
-            if (currentQuestion.answerType == ArcheryAnswerType.One)
-                ArcheryGameManager.Instance.AddWrongAttempt(lastSelectedValue);
-            else
-                ArcheryGameManager.Instance.AddWrongAttempt(string.Join(",", sequence));
 
             StartCoroutine(ProceedAfterResult(false));
         }
@@ -188,17 +202,8 @@ namespace Eduzo.Games.Archery.Core
 
         #region Utility
 
-        private void ClearUIFocus()
+        public void ResetTargetTexts()
         {
-            if (EventSystem.current != null)
-                EventSystem.current.SetSelectedGameObject(null);
-        }
-
-        public void ResetTargetVFX()
-        {
-            if (aimController != null)
-                aimController.ResetTargetVFX();
-
             foreach (var text in targetTexts)
                 text.text = string.Empty;
         }

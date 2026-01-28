@@ -106,6 +106,11 @@ namespace Eduzo.Games.Archery.UI
             input.readOnly = false;
             input.enabled = true;
 
+            // WORD SUPPORT
+            input.characterLimit = 0; // unlimited
+            input.contentType = TMP_InputField.ContentType.Standard;
+            input.lineType = TMP_InputField.LineType.SingleLine;
+
             return input;
         }
 
@@ -170,8 +175,15 @@ namespace Eduzo.Games.Archery.UI
         private List<string> Collect(List<TMP_InputField> inputs)
         {
             List<string> list = new();
+
             foreach (var i in inputs)
-                list.Add(i.text.ToUpperInvariant());
+            {
+                if (string.IsNullOrWhiteSpace(i.text))
+                    continue;
+
+                list.Add(i.text.Trim()); // keep words intact
+            }
+
             return list;
         }
 

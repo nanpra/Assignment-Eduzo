@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/EduzoGames/SequencingEventsGame/SequencingEventsScene/SequencingEvents.unity
     guid: 13edf62971861ad4d9e1cc28b143047d
   - enabled: 1
-    path: Assets/EduzoGames/Archery/ArcheryGameScene/Archery.unity
+    path: Assets/EduzoGames/ArcheryGame/ArcheryGameScene/Archery.unity
     guid: 01e44369af0686544a9b81875bbd28f5
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 83c413217c3e6894c93b8cc4fcd72bbe, type: 2}

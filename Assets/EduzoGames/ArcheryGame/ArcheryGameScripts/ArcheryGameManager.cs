@@ -36,6 +36,11 @@ namespace Eduzo.Games.Archery.Core
 
         #region Question Flow
 
+        private void CleanupGameplay()
+        {
+            ArcheryArrowPool.Instance.ResetPool();
+        }
+
         public void LoadGeneratedQuestions_Backend(List<ArcheryQuestionData> questions)
         {
             runtimeQuestions = new List<ArcheryQuestionData>(questions);
@@ -123,13 +128,37 @@ namespace Eduzo.Games.Archery.Core
 
         public void ResolveAfterAnswer(bool wasCorrect)
         {
-            bool isTestMode =
-                ArcheryUIManager.Instance.CurrentMode == ArcheryGameMode.Test;
+            bool isTestMode = ArcheryUIManager.Instance.CurrentMode == ArcheryGameMode.Test;
+            bool isLastQuestion = currentQuestionIndex >= runtimeQuestions.Count - 1;
 
-            bool isLastQuestion =
-                currentQuestionIndex >= runtimeQuestions.Count - 1;
+            // TEST MODE (ONE ATTEMPT PER QUESTION)
+            if (isTestMode)
+            {
+                FinalizeCurrentQuestion(wasCorrect);
 
-            // CASE 1: CORRECT ANSWER
+                // LAST QUESTION → END GAME
+                if (isLastQuestion)
+                {
+                    if (wasCorrect)
+                        HandleAllQuestionsCompleted();
+                    else
+                        HandleLose();
+
+                    return;
+                }
+
+                if (!ArcheryLifeManager.Instance.HasLivesLeft())
+                {
+                    HandleLose();
+                    return;
+                }
+
+                // NOT LAST QUESTION → MOVE FORWARD
+                currentQuestionIndex++;
+                StartCoroutine(LoadQuestion_FrontEnd());
+            }
+
+            // PRACTICE MODE (RETRIES ALLOWED)
             if (wasCorrect)
             {
                 FinalizeCurrentQuestion(true);
@@ -145,27 +174,7 @@ namespace Eduzo.Games.Archery.Core
                 return;
             }
 
-            // CASE 2: WRONG ANSWER
-            // PRACTICE MODE → retry SAME question
-            if (!isTestMode)
-            {
-                StartCoroutine(LoadQuestion_FrontEnd());
-                return;
-            }
-
-            if (!isLastQuestion)
-            {
-                currentQuestionIndex++;
-                FinalizeCurrentQuestion(false);
-            }
-
-            if (isLastQuestion && !ArcheryLifeManager.Instance.HasLivesLeft())
-            {
-                FinalizeCurrentQuestion(false);
-                HandleLose();
-                return;
-            }
-
+            // Retry same question
             StartCoroutine(LoadQuestion_FrontEnd());
         }
 
@@ -181,6 +190,7 @@ namespace Eduzo.Games.Archery.Core
 
         public void HandleAllQuestionsCompleted()
         {
+            CleanupGameplay();
             ArcheryAudioManager.Instance.PlaySFX("GameWin");
             starsVFX.SetActive(true);
             confettiVFX.SetActive(true);
@@ -194,6 +204,7 @@ namespace Eduzo.Games.Archery.Core
 
         public void HandleLose()
         {
+            CleanupGameplay();
             ArcheryAudioManager.Instance.PlaySFX("GameLose");
 
             ArcheryUIManager.Instance.ShowGameOverPanel();

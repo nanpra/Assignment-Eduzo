@@ -124,7 +124,7 @@ namespace Eduzo.Games.Archery.UI
         public void OnHomeClicked()
         {
             // reset everything and return to main menu
-            ArcheryQuestionsLoader.Instance.ResetTargetVFX();
+            ArcheryQuestionsLoader.Instance.ResetTargetTexts();
             ArcheryGameManager.Instance.starsVFX.SetActive(false);
             ArcheryGameManager.Instance.confettiVFX.SetActive(false);
             ArcheryAudioManager.Instance.PlaySFX("ButtonClick");
