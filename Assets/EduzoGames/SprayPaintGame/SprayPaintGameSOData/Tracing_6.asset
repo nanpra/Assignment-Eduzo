@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d3025c094f41d4288c4f893f552e20, type: 3}
+  m_Name: Tracing_6
+  m_EditorClassIdentifier: Assembly-CSharp::SprayPaintTracingSO
+  letter: 6
+  strokes:
+  - points:
+    - {x: 150, y: 225}
+    - {x: -85, y: 275}
+    - {x: -185, y: 40}
+    - {x: -155, y: -180}
+    - {x: 35, y: -305}
+    - {x: 175, y: -145}
+    - {x: 95, y: 50}
